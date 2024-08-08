@@ -1,23 +1,26 @@
 package com.koreaIT.java.jsp.AM.servlet;
 
 import java.io.IOException;
-import java.io.ObjectInputFilter.Config;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
 
-import com.koreaIT.java.jsp.AM.exception.SQLErrorException;
 import com.koreaIT.java.jsp.AM.util.DBUtil;
 import com.koreaIT.java.jsp.AM.util.SecSql;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-public class MemberDoLoginServlet {
+@WebServlet("/member/doLogin")
+public class MemberDoLoginServlet extends HttpServlet {
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 
@@ -35,11 +38,9 @@ public class MemberDoLoginServlet {
 		String password = "";
 
 		Connection conn = null;
-		
 
 		try {
 			conn = DriverManager.getConnection(url, user, password);
-			request.setCharacterEncoding("UTF-8");
 
 			String loginId = request.getParameter("loginId");
 			String loginPw = request.getParameter("loginPw");
@@ -52,28 +53,27 @@ public class MemberDoLoginServlet {
 
 			if (memberRow.isEmpty()) {
 				response.getWriter().append(String.format(
-						"<script>alert('%s는 없는 아이디입니다');location.replace('../member/login'); </script>", loginId));
+						"<script>alert('%s는 없는 아이디야'); location.replace('../member/login');</script>", loginId));
 				return;
 			}
 
 			if (memberRow.get("loginPw").equals(loginPw) == false) {
-				response.getWriter().append(String.format(
-						"<script>alert('비밀번호가 틀렸습니다');location.replace('../member/login'); </script>", loginId));
+				response.getWriter().append(
+						String.format("<script>alert('비밀번호 일치 x'); location.replace('../member/login');</script>"));
 				return;
 			}
 
 			HttpSession session = request.getSession();
 			session.setAttribute("loginedMemberId", memberRow.get("id"));
 			session.setAttribute("loginedMemberLoginId", memberRow.get("loginId"));
+			session.setAttribute("loginedMember", memberRow);
 
 			response.getWriter()
-					.append(String.format("<script>alert('%s님 환영합니다'); location.replace('../article/list');</script>",
+					.append(String.format("<script>alert('%s님 로그인 됨'); location.replace('../article/list');</script>",
 							memberRow.get("name")));
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (SQLErrorException e) {
-			e.getOrigin().printStackTrace();
+			System.out.println("에러 1 : " + e);
 		} finally {
 			try {
 				if (conn != null && !conn.isClosed()) {
@@ -83,6 +83,7 @@ public class MemberDoLoginServlet {
 				e.printStackTrace();
 			}
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
