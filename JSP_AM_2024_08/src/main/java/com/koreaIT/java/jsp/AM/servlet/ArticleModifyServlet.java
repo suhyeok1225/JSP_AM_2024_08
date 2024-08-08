@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/modify")
 public class ArticleModifyServlet extends HttpServlet {
@@ -21,15 +22,17 @@ public class ArticleModifyServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		// DB연결
+
+		// DB 연결
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			System.out.println("클래스가 없습니다.");
+			System.out.println("클래스 x");
 			e.printStackTrace();
 		}
 
 		String url = "jdbc:mysql://127.0.0.1:3306/24_08_JAM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul";
+
 		String user = "root";
 		String password = "";
 
@@ -42,15 +45,20 @@ public class ArticleModifyServlet extends HttpServlet {
 
 			SecSql sql = SecSql.from("SELECT *");
 			sql.append("FROM article");
-			sql.append("WHERE id = ?;", id);
+			sql.append("WHERE id = ?", id);
 
 			Map<String, Object> articleRow = DBUtil.selectRow(conn, sql);
 
+			if (articleRow == null) {
+				// todo
+			}
+
 			request.setAttribute("articleRow", articleRow);
+
 			request.getRequestDispatcher("/jsp/article/modify.jsp").forward(request, response);
 
 		} catch (SQLException e) {
-			System.out.println("에러 : " + e);
+			System.out.println("에러 1 : " + e);
 		} finally {
 			try {
 				if (conn != null && !conn.isClosed()) {
@@ -60,6 +68,7 @@ public class ArticleModifyServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

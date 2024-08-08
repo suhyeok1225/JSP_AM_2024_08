@@ -1,14 +1,20 @@
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <%
 List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getAttribute("articleRows");
+
 int cPage = (int) request.getAttribute("page");
 int totalPage = (int) request.getAttribute("totalPage");
 int totalCnt = (int) request.getAttribute("totalCnt");
-%>
 
+boolean isLogined = (boolean) request.getAttribute("isLogined");
+int loginedMemberId = (int) request.getAttribute("loginedMemberId");
+Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("loginedMember");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,15 +22,36 @@ int totalCnt = (int) request.getAttribute("totalCnt");
 <title>게시물 목록</title>
 </head>
 <body>
+
 	<h2>게시물 목록</h2>
-	
-	<div>
-		<a href="../home/main">메인으로 이동</a>
+
+	<div><%=loginedMemberId%>번 회원 로그인 중
 	</div>
+	<div><%=loginedMember%></div>
+
+	<%
+	if (isLogined) {
+	%>
 	<div>
-		<a href="write">글쓰기</a>
+		<a href="../member/doLogout">로그아웃</a> <a href="write">글쓰기</a>
 	</div>
-	
+	<%
+	}
+	%>
+
+	<%
+	if (!isLogined) {
+	%>
+	<div>
+		<a href="../member/login">로그인</a>
+	</div>
+	<%
+	}
+	%>
+
+	<a href="../home/main">메인 페이지로 </a>
+
+
 	<div>
 		총 게시글 수 :
 		<%=totalCnt%>
@@ -37,6 +64,7 @@ int totalCnt = (int) request.getAttribute("totalCnt");
 			<tr>
 				<th>번호</th>
 				<th>날짜</th>
+				<th>작성자</th>
 				<th>제목</th>
 				<th>내용</th>
 				<th>수정</th>
@@ -50,17 +78,19 @@ int totalCnt = (int) request.getAttribute("totalCnt");
 			<tr style="text-align: center;">
 				<td><%=articleRow.get("id")%></td>
 				<td><%=articleRow.get("regDate")%></td>
+				<td><%=articleRow.get("name")%></td>
 				<td><a href="detail?id=<%=articleRow.get("id")%>"><%=articleRow.get("title")%></a>
 				</td>
 				<td><%=articleRow.get("body")%></td>
 				<td><a href="modify?id=<%=articleRow.get("id")%>">수정</a></td>
-				<td><a href="doDelete?id=<%=articleRow.get("id")%>">삭제</a></td>
+				<td><a href="doDelete?id=<%=articleRow.get("id")%>">del</a></td>
 			</tr>
 			<%
 			}
 			%>
 		</tbody>
 	</table>
+
 	<style type="text/css">
 .page {
 	font-size: 1.4rem;
@@ -86,6 +116,7 @@ int totalCnt = (int) request.getAttribute("totalCnt");
 		}
 		%>
 	</div>
+
 
 </body>
 </html>

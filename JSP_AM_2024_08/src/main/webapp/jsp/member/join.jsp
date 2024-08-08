@@ -28,10 +28,12 @@
 			// 			console.log('form.name.value : ' + form.name.value);
 			// 			form.loginId.value = form.loginId.value.trim();
 			// 			console.log("loginId : " + loginId);
+
 			let loginId = form.loginId.value.trim();
 			let loginPw = form.loginPw.value.trim();
 			let loginPwConfirm = form.loginPwConfirm.value.trim();
 			let name = form.name.value.trim();
+
 			if (loginId.length == 0) {
 				alert('아이디 써');
 				return;
@@ -44,17 +46,21 @@
 				alert('비번 확인 써');
 				return;
 			}
+
 			if (loginPw != loginPwConfirm) {
 				alert('비번 일치 x');
 				form.loginPw.focus();
 				return;
 			}
+
 			if (name.length == 0) {
 				alert('이름 써');
 				return;
 			}
 			
+
 			form.submit();
+
 		}
 	</script>
 

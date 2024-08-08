@@ -1,10 +1,13 @@
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <%
 Map<String, Object> articleRow = (Map<String, Object>) request.getAttribute("articleRow");
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +15,9 @@ Map<String, Object> articleRow = (Map<String, Object>) request.getAttribute("art
 <title><%=articleRow.get("id")%>번 글 수정</title>
 </head>
 <body>
+
 	<a href="../home/main">메인 페이지로 </a>
+
 	<h2><%=articleRow.get("id")%>번 글 수정
 	</h2>
 
@@ -31,13 +36,14 @@ Map<String, Object> articleRow = (Map<String, Object>) request.getAttribute("art
 			새 내용 :
 			<textarea type="text" placeholder="내용 입력해" name="body"></textarea>
 		</div>
-		<button type="submit">작성</button>
 		<button type="submit">수정</button>
 	</form>
+
 
 
 	<div>
 		<a style="color: green" href="list">리스트로 돌아가기</a>
 	</div>
+
 </body>
 </html>
