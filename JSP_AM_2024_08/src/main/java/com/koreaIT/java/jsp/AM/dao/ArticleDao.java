@@ -30,6 +30,7 @@ public class ArticleDao {
 		sql.append("ON A.memberId = M.id");
 		sql.append("ORDER BY id DESC");
 		sql.append("LIMIT ?, ?;", limitFrom, itemsInAPage);
+
 		List<Map<String, Object>> articleRows = DBUtil.selectRows(conn, sql);
 
 		List<Article> articles = new ArrayList<>();
@@ -37,7 +38,7 @@ public class ArticleDao {
 		for (Map<String, Object> articleMap : articleRows) {
 			articles.add(new Article(articleMap));
 		}
-
+		
 		return articles;
 	}
 
