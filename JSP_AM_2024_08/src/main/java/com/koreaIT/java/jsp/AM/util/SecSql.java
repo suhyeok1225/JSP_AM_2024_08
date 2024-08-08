@@ -18,7 +18,7 @@ public class SecSql {
 
     public SecSql() {
         sqlBuilder = new StringBuilder();
-        datas = new ArrayList<>(); 
+        datas = new ArrayList<>();
     }
 
     public boolean isInsert() {

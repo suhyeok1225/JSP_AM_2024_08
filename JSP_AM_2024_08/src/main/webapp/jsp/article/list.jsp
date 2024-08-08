@@ -1,12 +1,17 @@
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
+<%@page import="com.KoreaIT.java.jsp_AM.dto.Article"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <%
-List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getAttribute("articleRows");
+List<Article> articles = (List<Article>) request.getAttribute("articles");
+
 int cPage = (int) request.getAttribute("page");
 int totalPage = (int) request.getAttribute("totalPage");
 int totalCnt = (int) request.getAttribute("totalCnt");
+
 boolean isLogined = (boolean) request.getAttribute("isLogined");
 int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("loginedMember");
@@ -18,13 +23,20 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 <title>게시물 목록</title>
 </head>
 <body>
+
+	<h2>게시물 목록</h2>
+
 	<%@ include file="../part/top_bar.jspf"%>
+
 	<a href="../home/main">메인 페이지로 </a>
+
+
 	<div>
 		총 게시글 수 :
 		<%=totalCnt%>
 		개
 	</div>
+
 	<table style="border-collapse: collapse; border-color: green;"
 		border="1px">
 		<thead>
@@ -40,36 +52,40 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 		</thead>
 		<tbody>
 			<%
-			for (Map<String, Object> articleRow : articleRows) {
+			for (Article article : articles) {
 			%>
 			<tr style="text-align: center;">
-				<td><%=articleRow.get("id")%></td>
-				<td><%=articleRow.get("regDate")%></td>
-				<td><%=articleRow.get("name")%></td>
-				<td><a href="detail?id=<%=articleRow.get("id")%>"><%=articleRow.get("title")%></a>
+				<td><%=article.getId()%></td>
+				<td><%=article.getRegDate()%></td>
+				<td><%=article.getName()%></td>
+				<td><a href="detail?id=<%=article.getId()%>"><%=article.getTitle()%></a>
 				</td>
-				<td><%=articleRow.get("body")%></td>
-				<td><a href="modify?id=<%=articleRow.get("id")%>">수정</a></td>
-				<td><a href="doDelete?id=<%=articleRow.get("id")%>">삭제</a></td>
+				<td><%=article.getBody()%></td>
+				<td><a href="modify?id=<%=article.getId()%>">수정</a></td>
+				<td><a href="doDelete?id=<%=article.getId()%>">del</a></td>
 			</tr>
 			<%
 			}
 			%>
 		</tbody>
 	</table>
+
 	<style type="text/css">
 .page {
 	font-size: 1.4rem;
 }
+
 .page>a {
 	color: black;
 	text-decoration: none;
 }
+
 .page>a.cPage {
 	color: red;
 	text-decoration: underline;
 }
 </style>
+
 	<div class="page">
 		<%
 		for (int i = 1; i <= totalPage; i++) {
@@ -79,5 +95,7 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 		}
 		%>
 	</div>
+
+
 </body>
 </html>

@@ -3,8 +3,8 @@ package com.koreaIT.java.jsp.AM.controller;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 
+import com.koreaIT.java.jsp.AM.dto.Article;
 import com.koreaIT.java.jsp.AM.service.ArticleService;
 
 import jakarta.servlet.ServletException;
@@ -16,14 +16,15 @@ public class ArticleController {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 	private Connection conn;
+
 	private ArticleService articleService;
 
 	public ArticleController(HttpServletRequest request, HttpServletResponse response, Connection conn) {
 		this.conn = conn;
 		this.request = request;
 		this.response = response;
-		this.articleService = new ArticleService(conn);
 
+		this.articleService = new ArticleService(conn);
 	}
 
 	public void showList() throws ServletException, IOException {
@@ -35,16 +36,16 @@ public class ArticleController {
 
 		int itemsInAPage = 10;
 		int limitFrom = (page - 1) * itemsInAPage;
+
 		int totalCnt = articleService.getTotalCnt();
-		
 		int totalPage = (int) Math.ceil(totalCnt / (double) itemsInAPage);
 
-		List<Map<String, Object>> articleRows = articleService.getForPrintArticles(limitFrom, itemsInAPage);
+		List<Article> articles = articleService.getForPrintArticles(limitFrom, itemsInAPage);
 
 		request.setAttribute("page", page);
 		request.setAttribute("totalPage", totalPage);
 		request.setAttribute("totalCnt", totalCnt);
-		request.setAttribute("articleRows", articleRows);
+		request.setAttribute("articles", articles);
 		request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 	}
 
